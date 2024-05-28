@@ -71,20 +71,51 @@ class Tree {
   }
 
   levelOrder (callback) {
-    let queue = [];
+    let queue = []; // using a queue, first in, first out
     let traversal = []; // to store the result (traversal in breadth-first level order)
     queue.push(this.root);
 
     while (queue.length > 0) {
-      for (let i = 0; i < queue.length; i++) {
-        const node = queue.shift();
-        traversal.push(node.data);
-        if (node.left) queue.push(node.left);
-        if (node.right) queue.push(node.right);
-        if (callback) callback(node); // if callback function is provided, call it for each node
-      }
+      const node = queue.shift();
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+      if (callback) callback(node); // if callback function is provided, call it for each node
+      traversal.push(node.data);
     }
 
+    if (!callback) return traversal;
+  }
+
+  // a depth-first, inorder traversal
+  inOrder (callback, node = this.root, traversal = []) {
+    if (node === null) return;
+
+    this.inOrder(callback, node.left, traversal);
+    callback ? callback(node) : traversal.push(node.data);
+    this.inOrder(callback, node.right, traversal);
+
+    if (!callback) return traversal;
+  }
+
+  // a depth-first, preorder traversal
+  preOrder (callback, node = this.root, traversal = []) {
+    if (node === null) return;
+
+    callback ? callback(node) : traversal.push(node.data);
+    this.inOrder(callback, node.left, traversal);
+    this.inOrder(callback, node.right, traversal);
+
+    if (!callback) return traversal;
+  }
+
+  // a depth-first, postorder traversal
+  postOrder (callback, node = this.root, traversal = []) {
+    if (node === null) return;
+
+    this.inOrder(callback, node.left, traversal);
+    this.inOrder(callback, node.right, traversal);
+    callback ? callback(node) : traversal.push(node.data);
+    
     if (!callback) return traversal;
   }
 
@@ -113,3 +144,6 @@ tree.deleteItem(4);
 prettyPrint(tree.root);
 prettyPrint(tree.find(6345));
 console.log(tree.levelOrder());
+console.log(tree.inOrder());
+console.log(tree.preOrder());
+console.log(tree.postOrder());
