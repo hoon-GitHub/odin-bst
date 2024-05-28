@@ -27,31 +27,30 @@ class Tree {
     if (root === null) {
       root = new Node(value);
       return root;
-    }
+    } // base case
 
-    if (value < root.data) {
-      root.left = this.insert(value, root.left);
-    } else if (value > root.data) {
-      root.right = this.insert(value, root.right);
-    }
+    if (value < root.data) root.left = this.insert(value, root.left);
+    else if (value > root.data) root.right = this.insert(value, root.right);
+
     return root;
   }
 
-  deleteItem(value, root = this.root) {
-    if (root === null) return null;
+  deleteItem (value, root = this.root) {
+    if (root === null) return null; // base case
 
-    if (value < root.data) {
+    if (value < root.data) { // traverse through the tree to find the node to delete
       root.left = this.deleteItem(value, root.left);
     } else if (value > root.data) {
       root.right = this.deleteItem(value, root.right);
-    } else {
-      if (root.left === null) return root.right;
-      else if (root.right === null) return root.left;
+    } else { // found the node to delete
+      if (root.left === null) return root.right; // left is null, thus only one child (right)
+      else if (root.right === null) return root.left; // right is null, thus only one child (left)
 
+      // otherwise, the node has two children - find the successor to replace
       root.data = this.minValue(root.right);
       root.right = this.deleteItem(root.data, root.right);
     }
-    
+
     return root;
   }
 
@@ -62,6 +61,31 @@ class Tree {
       node = node.left;
     }
     return minv;
+  }
+
+  find (value, root = this.root) {
+    if (root.data === value) return root;
+
+    if (value < root.data) return this.find(value, root.left);
+    else if (value > root.data) return this.find(value, root.right);
+  }
+
+  levelOrder (callback) {
+    let queue = [];
+    let traversal = []; // to store the result (traversal in breadth-first level order)
+    queue.push(this.root);
+
+    while (queue.length > 0) {
+      for (let i = 0; i < queue.length; i++) {
+        const node = queue.shift();
+        traversal.push(node.data);
+        if (node.left) queue.push(node.left);
+        if (node.right) queue.push(node.right);
+        if (callback) callback(node); // if callback function is provided, call it for each node
+      }
+    }
+
+    if (!callback) return traversal;
   }
 
 }
@@ -87,3 +111,5 @@ tree.insert(15);
 prettyPrint(tree.root);
 tree.deleteItem(4);
 prettyPrint(tree.root);
+prettyPrint(tree.find(6345));
+console.log(tree.levelOrder());
