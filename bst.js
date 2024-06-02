@@ -119,6 +119,13 @@ class Tree {
     if (!callback) return traversal;
   }
 
+  height (node = this.root) {
+    if (node === null) return 0;
+    const heightLeft = this.height(node.left);
+    const heightRight = this.height(node.right);
+    return Math.max(heightLeft, heightRight) + 1;
+  }
+
 }
 
 // provided utility print function
