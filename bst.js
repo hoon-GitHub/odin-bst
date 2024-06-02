@@ -134,6 +134,21 @@ class Tree {
     if (value > node.data) return this.depth(value, node.right) + 1;
   }
 
+  isBalanced(node = this.root) {
+    if (node === null) return true;
+    const diff = Math.abs(this.height(node.left) - this.height(node.right));
+    return (
+      diff <= 1 &&
+      this.isBalanced(node.left) &&
+      this.isBalanced(node.right)
+    );
+  }
+
+  rebalance() {
+    const inOrderList = this.inOrder();
+    this.root = this.buildTree(inOrderList);
+  }
+
 }
 
 // provided utility print function
@@ -153,9 +168,11 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 const dataArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(dataArray);
 prettyPrint(tree.root);
+console.log(tree.isBalanced());
 tree.insert(15);
 prettyPrint(tree.root);
-tree.deleteItem(4);
-prettyPrint(tree.root);
 
-console.log(tree.depth(15));
+console.log(tree.isBalanced());
+tree.rebalance();
+prettyPrint(tree.root);
+console.log(tree.isBalanced());
