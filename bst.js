@@ -165,14 +165,25 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const dataArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const tree = new Tree(dataArray);
-prettyPrint(tree.root);
-console.log(tree.isBalanced());
-tree.insert(15);
-prettyPrint(tree.root);
+// driver script
+const randomArray = (size) => {
+  return Array.from({ length: size }, () => Math.floor(Math.random() * 100));
+};
 
-console.log(tree.isBalanced());
+const tree = new Tree(randomArray(30));
+console.log('Balanced:', tree.isBalanced());
+console.log('Lever Order =>', tree.levelOrder());
+console.log('Preorder =>', tree.preOrder());
+console.log('Inorder =>', tree.inOrder());
+console.log('Postorder =>', tree.postOrder());
+
+for (let i = 0; i < 5; i++) {
+  tree.insert(Math.floor(Math.random() * 20));
+}
+console.log('Balanced:', tree.isBalanced());
 tree.rebalance();
-prettyPrint(tree.root);
-console.log(tree.isBalanced());
+console.log('Balanced:', tree.isBalanced());
+console.log('Lever Order =>', tree.levelOrder());
+console.log('Preorder =>', tree.preOrder());
+console.log('In-order =>', tree.inOrder());
+console.log('Post-order =>', tree.postOrder());
