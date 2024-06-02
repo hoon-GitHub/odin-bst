@@ -63,11 +63,11 @@ class Tree {
     return minv;
   }
 
-  find (value, root = this.root) {
-    if (root.data === value) return root;
+  find (value, node = this.root) {
+    if (node.data === value) return node;
 
-    if (value < root.data) return this.find(value, root.left);
-    else if (value > root.data) return this.find(value, root.right);
+    if (value < node.data) return this.find(value, node.left);
+    else if (value > node.data) return this.find(value, node.right);
   }
 
   levelOrder (callback) {
@@ -119,11 +119,19 @@ class Tree {
     if (!callback) return traversal;
   }
 
-  height (node = this.root) {
+  // the number of edges in the longest path from a given node to a leaf node
+  height (node) {
     if (node === null) return 0;
     const heightLeft = this.height(node.left);
     const heightRight = this.height(node.right);
     return Math.max(heightLeft, heightRight) + 1;
+  }
+
+  // the number of edges in the path from a given node to the tree’s root node
+  depth (value, node = this.root) {
+    if (node.data === value) return 0;
+    if (value < node.data) return this.depth(value, node.left) + 1;
+    if (value > node.data) return this.depth(value, node.right) + 1;
   }
 
 }
@@ -149,8 +157,5 @@ tree.insert(15);
 prettyPrint(tree.root);
 tree.deleteItem(4);
 prettyPrint(tree.root);
-prettyPrint(tree.find(6345));
-console.log(tree.levelOrder());
-console.log(tree.inOrder());
-console.log(tree.preOrder());
-console.log(tree.postOrder());
+
+console.log(tree.depth(15));
